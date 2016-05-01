@@ -27,7 +27,7 @@ Idea based on **jQuery**, a very lightweight JavaScript framework to perform bas
 - _("#id-name").hide();
 
 **shows an element**:
- _("#id-name").show();
+ - _("#id-name").show();
 
 **checks if a class contains**:
 - _("#id-name").hasClass( {string} className);
