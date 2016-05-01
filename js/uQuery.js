@@ -164,6 +164,4 @@ function _REQUEST(url, async, arguments, callback, getRequest) {
     }else{
         xhttp.send();
     }
-
-    alert(argsString);
 }
