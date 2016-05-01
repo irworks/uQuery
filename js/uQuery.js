@@ -81,3 +81,89 @@ function _(elementName) {
 
     return this;
 }
+
+/**
+ * sends a get request to given url
+ @param {string} url - the address to request to
+ @param {boolean} async - should the request run asynchronously?
+ @param {map} arguments - a key value store of all arguments
+ @param {function} callback - the function(data) to get called when done
+ */
+function _GET(url, async, arguments, callback) {
+    _REQUEST(url, async, arguments, callback, true);
+}
+
+/**
+ * sends a post request to given url
+ @param {string} url - the address to request to
+ @param {boolean} async - should the request run asynchronously?
+ @param {map} arguments - a key value store of all arguments
+ @param {function} callback - the function(data) to get called when done
+ */
+/* send a post request */
+function _POST(url, async, arguments, callback) {
+    _REQUEST(url, async, arguments, callback, false);
+}
+
+/* request to given URL with given method */
+function _REQUEST(url, async, arguments, callback, getRequest) {
+    var xhttp = new XMLHttpRequest();
+    var data = {};
+    
+    xhttp.onreadystatechange = function() {
+        
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+            data['success'] = true;
+        }else if(xhttp.readyState == 4 && xhttp.status != 200){
+            data['success'] = false;
+        }
+
+        if (xhttp.readyState == 4) {
+
+            data['statusCode']   = xhttp.status;
+            data['statusText']   = xhttp.statusText;
+            data['response']     = xhttp.responseText;
+            data['type']         = xhttp.responseType;
+            data['timeout']      = xhttp.timeout;
+
+            callback(data);
+        }
+    };
+
+    var argsString = '';
+    var i = 0;
+
+    for(var arg in arguments) {
+        if(!arguments.hasOwnProperty(arg)) {
+            continue;
+        }
+
+        if (i > 0) {
+           argsString += '&';
+        }
+
+        argsString += arg + '=' + arguments[arg];
+
+        i++;
+    }
+
+    var method = 'POST';
+
+    if(getRequest) {
+        if(argsString.length > 0) {
+            url += '?' + argsString;
+        }
+        method = 'GET';
+    }
+
+    xhttp.open(method, url, async);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    if(!getRequest) {
+        xhttp.send(argsString);
+    }else{
+        xhttp.send();
+    }
+
+    alert(argsString);
+}
