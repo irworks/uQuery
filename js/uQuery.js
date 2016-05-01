@@ -41,7 +41,7 @@ function _(elementName) {
         res = document.getElementsByTagName(elementName);
     }
 
-    if(res == undefined) {
+    if(res === undefined) {
         return undefined;
     }
 
@@ -51,24 +51,38 @@ function _(elementName) {
     this.fadeIn = function (sec) {
         sec = def(sec, 1);
         this.show();
-        this.html.style.animation = 'fadeIn ' + sec + 's linear';
+        iterateThroughAllOrOne(this.html, function (object) {
+            object.style.animation = 'fadeIn ' + sec + 's linear';
+            object.addEventListener("animationend",function(e){
+                object.style.opacity = 1;
+            });
+        });
     };
 
     /* fades an object out */
     this.fadeOut = function (sec) {
         sec = def(sec, 1);
-        this.html.style.animation = 'fadeOut ' + sec + 's linear';
+        iterateThroughAllOrOne(this.html, function (object) {
+            object.style.animation = 'fadeOut ' + sec + 's linear';
+            object.addEventListener("animationend",function(e){
+                object.style.opacity = 0;
+            });
+        });
     };
 
     /* shows an object, optional: type what display type it should get */
     this.show = function (type) {
         type = def(type, 'block');
-        this.html.style.display = type;
+        iterateThroughAllOrOne(this.html, function (object) {
+            object.style.display = type;
+        });
     };
 
     /* hides an object */
     this.hide = function () {
-        this.html.style.display = 'none';
+        iterateThroughAllOrOne(this.html, function (object) {
+            object.style.display = 'none';
+        });
     };
 
     /* sets the content text of the element */
@@ -80,6 +94,18 @@ function _(elementName) {
     };
 
     return this;
+}
+
+function iterateThroughAllOrOne(object, callback) {
+    if(object.style === undefined) {
+        for(var key in object){
+            if(object.hasOwnProperty(key) && object[key].style !== undefined) {
+                callback(object[key]);
+            }
+        }
+    } else {
+        callback(object);
+    }
 }
 
 /**

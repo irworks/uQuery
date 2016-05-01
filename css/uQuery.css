@@ -28,18 +28,15 @@
 @-moz-keyframes fadeOut {
     100% {
         opacity: 0;
-        display: none;
     }
 }
 @-webkit-keyframes fadeOut {
     100% {
         opacity: 0;
-        display: none;
     }
 }
 @keyframes fadeOut {
     100% {
         opacity: 0;
-        display: none;
     }
 }
