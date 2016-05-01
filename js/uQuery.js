@@ -93,6 +93,29 @@ function _(elementName) {
         this.html.innerHTML = text;
     };
 
+    /* checks if an object has a class */
+    this.hasClass = function (request) {
+        var classes = this.html.className.split(' ');
+        for(var c in classes) {
+            if(classes.hasOwnProperty(c) && classes[c] == request) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    /* adds/removes a class to an object */
+    this.toggleClass = function (request) {
+        if (this.hasClass(request)) {
+            var match1 = request + '[^a-zA-Z_\\-0-9]\\s*';
+            var match2 = '\\s*' + request + '$';
+            this.html.className = this.html.className.replace(new RegExp(match1, 'g'), '');
+            this.html.className = this.html.className.replace(new RegExp(match2, 'g'), '');
+        } else {
+            this.html.className += ' ' + request;
+        }
+    };
+
     return this;
 }
 
