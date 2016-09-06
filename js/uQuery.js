@@ -55,7 +55,9 @@ function _(elementName) {
             object.style.animation = 'fadeIn ' + sec + 's linear';
             object.addEventListener("animationend",function(e){
                 object.style.opacity = 1;
-                callback(this);
+                if(callback) {
+                    callback(this);
+                }
             });
         });
     };
@@ -67,7 +69,9 @@ function _(elementName) {
             object.style.animation = 'fadeOut ' + sec + 's linear';
             object.addEventListener("animationend",function(e){
                 object.style.opacity = 0;
-                callback(this);
+                if(callback) {
+                    callback(this);
+                }
             });
         });
     };
