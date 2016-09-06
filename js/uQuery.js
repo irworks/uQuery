@@ -48,24 +48,26 @@ function _(elementName) {
     this.html = res;
 
     /* fades an object in */
-    this.fadeIn = function (sec) {
+    this.fadeIn = function (sec, callback) {
         sec = def(sec, 1);
         this.show();
         iterateThroughAllOrOne(this.html, function (object) {
             object.style.animation = 'fadeIn ' + sec + 's linear';
             object.addEventListener("animationend",function(e){
                 object.style.opacity = 1;
+                callback(this);
             });
         });
     };
 
     /* fades an object out */
-    this.fadeOut = function (sec) {
+    this.fadeOut = function (sec, callback) {
         sec = def(sec, 1);
         iterateThroughAllOrOne(this.html, function (object) {
             object.style.animation = 'fadeOut ' + sec + 's linear';
             object.addEventListener("animationend",function(e){
                 object.style.opacity = 0;
+                callback(this);
             });
         });
     };
