@@ -157,11 +157,11 @@ function iterateThroughAllOrOne(object, callback) {
  @param {function} callback - the function(data) to get called when done
  */
 function _GET(url, async, arguments, callback) {
-    _GET(url, async, arguments, callback, {});
+    _GET(url, async, arguments, callback, {}, false);
 }
 
-function _GET(url, async, arguments, callback, headers) {
-    _REQUEST(url, async, arguments, callback, true, headers);
+function _GET(url, async, arguments, callback, headers, json) {
+    _REQUEST(url, async, arguments, callback, true, headers, json);
 }
 
 /**
@@ -172,19 +172,19 @@ function _GET(url, async, arguments, callback, headers) {
  @param {function} callback - the function(data) to get called when done
  */
 function _POST(url, async, arguments, callback) {
-    _POST(url, async, arguments, callback, {});
+    _POST(url, async, arguments, callback, {}, false);
 }
 /* send a post request */
-function _POST(url, async, arguments, callback, headers) {
-    _REQUEST(url, async, arguments, callback, false, headers);
+function _POST(url, async, arguments, callback, headers, json) {
+    _REQUEST(url, async, arguments, callback, false, headers, json);
 }
 
 function _REQUEST(url, async, arguments, callback, getRequest) {
-    _REQUEST(url, async, arguments, callback, getRequest, {});
+    _REQUEST(url, async, arguments, callback, getRequest, {}, false);
 }
 
 /* request to given URL with given method */
-function _REQUEST(url, async, arguments, callback, getRequest, headers) {
+function _REQUEST(url, async, arguments, callback, getRequest, headers, json) {
     var xhttp = new XMLHttpRequest();
     var data = {};
     
@@ -244,8 +244,12 @@ function _REQUEST(url, async, arguments, callback, getRequest, headers) {
     }
 
     if(!getRequest) {
-        xhttp.send(argsString);
-    }else{
+	if(json) {
+	   xhttp.send(arguments);
+	} else {
+           xhttp.send(argsString);
+	}
+    } else {
         xhttp.send();
     }
 }
