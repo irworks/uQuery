@@ -145,6 +145,10 @@ function iterateThroughAllOrOne(object, callback) {
  @param {function} callback - the function(data) to get called when done
  */
 function _GET(url, async, arguments, callback) {
+    _GET(url, async, arguments, callback, {});
+}
+
+function _GET(url, async, arguments, callback, headers) {
     _REQUEST(url, async, arguments, callback, true);
 }
 
@@ -155,13 +159,20 @@ function _GET(url, async, arguments, callback) {
  @param {map} arguments - a key value store of all arguments
  @param {function} callback - the function(data) to get called when done
  */
-/* send a post request */
 function _POST(url, async, arguments, callback) {
+    _POST(url, async, arguments, callback, {});
+}
+/* send a post request */
+function _POST(url, async, arguments, callback, headers) {
     _REQUEST(url, async, arguments, callback, false);
 }
 
-/* request to given URL with given method */
 function _REQUEST(url, async, arguments, callback, getRequest) {
+    _REQUEST(url, async, arguments, callback, getRequest, {});
+}
+
+/* request to given URL with given method */
+function _REQUEST(url, async, arguments, callback, getRequest, headers) {
     var xhttp = new XMLHttpRequest();
     var data = {};
     
@@ -213,6 +224,12 @@ function _REQUEST(url, async, arguments, callback, getRequest) {
 
     xhttp.open(method, url, async);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    for (var key in headers) {
+        if (!data.hasOwnProperty(k)) {
+            continue;
+        }
+        xhttp.setRequestHeader(key, headers[key]);
+    }
 
     if(!getRequest) {
         xhttp.send(argsString);
