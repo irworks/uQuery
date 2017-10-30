@@ -49,7 +49,7 @@ function _(elementName) {
 
     /* fades an object in */
     this.fadeIn = function (sec, callback) {
-        sec = def(sec, 1);
+        sec         = def(sec, 1);
         this.show();
         iterateThroughAllOrOne(this.html, function (object) {
             object.style.animation = 'fadeIn ' + sec + 's linear';
@@ -63,12 +63,16 @@ function _(elementName) {
     };
 
     /* fades an object out */
-    this.fadeOut = function (sec, callback) {
-        sec = def(sec, 1);
+    this.fadeOut = function (sec, keepSpace, callback) {
+        sec         = def(sec, 1);
+        keepSpace   = def(keepSpace, false);
+
         iterateThroughAllOrOne(this.html, function (object) {
             object.style.animation = 'fadeOut ' + sec + 's linear';
             object.addEventListener("animationend",function(e){
-                object.style.opacity = 0;
+                if(!keepSpace) {
+                    object.style.opacity = 0;
+                }
                 if(callback) {
                     callback(this);
                 }
@@ -113,13 +117,21 @@ function _(elementName) {
     /* adds/removes a class to an object */
     this.toggleClass = function (request) {
         if (this.hasClass(request)) {
-            var match1 = request + '[^a-zA-Z_\\-0-9]\\s*';
-            var match2 = '\\s*' + request + '$';
-            this.html.className = this.html.className.replace(new RegExp(match1, 'g'), '');
-            this.html.className = this.html.className.replace(new RegExp(match2, 'g'), '');
+	        this.removeClass(request);
         } else {
-            this.html.className += ' ' + request;
+            this.addClass(request);
         }
+    };
+    
+    this.addClass = function (request) {
+	    this.html.className += ' ' + request;
+    };
+    
+    this.removeClass = function (request) {
+        var match1 = request + '[^a-zA-Z_\\-0-9]\\s*';
+        var match2 = '\\s*' + request + '$';
+        this.html.className = this.html.className.replace(new RegExp(match1, 'g'), '');
+        this.html.className = this.html.className.replace(new RegExp(match2, 'g'), '');
     };
 
     return this;
@@ -149,7 +161,7 @@ function _GET(url, async, arguments, callback) {
 }
 
 function _GET(url, async, arguments, callback, headers) {
-    _REQUEST(url, async, arguments, callback, true);
+    _REQUEST(url, async, arguments, callback, true, headers);
 }
 
 /**
@@ -164,7 +176,7 @@ function _POST(url, async, arguments, callback) {
 }
 /* send a post request */
 function _POST(url, async, arguments, callback, headers) {
-    _REQUEST(url, async, arguments, callback, false);
+    _REQUEST(url, async, arguments, callback, false, headers);
 }
 
 function _REQUEST(url, async, arguments, callback, getRequest) {
@@ -225,7 +237,7 @@ function _REQUEST(url, async, arguments, callback, getRequest, headers) {
     xhttp.open(method, url, async);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     for (var key in headers) {
-        if (!data.hasOwnProperty(k)) {
+        if (!headers.hasOwnProperty(key)) {
             continue;
         }
         xhttp.setRequestHeader(key, headers[key]);
